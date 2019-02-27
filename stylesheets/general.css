@@ -1,0 +1,27 @@
+body {
+  font: 18px Helvetica, Arial, sans-serif;
+}
+form input[type="text"] {
+  width: 350px;
+}
+form button, form input[type="submit"] {
+  height: 30px;
+  font-weight: bold;
+  font-size: 70%;
+}
+img.artist_portrait {
+  border: 3px solid #000;
+  height: 175px;
+  margin: 0px 20px 20px 0px;;
+}
+#div_artist_summary {
+  width: 55%;
+  padding: 0px 12px 12px 12px;
+}
+#div_fanart_results {
+  padding: 25px 0px 25px 0px;
+}
+#div_fanart_results img {
+  height: 150px;
+  padding: 12px 0px 12px 12px;
+}
