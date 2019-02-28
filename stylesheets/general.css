@@ -1,13 +1,25 @@
 body {
   font: 18px Helvetica, Arial, sans-serif;
+  background-color: linen;
+}
+form {
+  margin-top: 30px;
+}
+form div {
+  margin-bottom: 12px;
 }
 form input[type="text"] {
-  width: 350px;
+  width: 300px;
+  font-size: 80%;
+}
+form label {
+  margin-right: 12px;
 }
 form button, form input[type="submit"] {
-  height: 30px;
+  height: 40px;
+  width: 180px;
   font-weight: bold;
-  font-size: 70%;
+  font-size: 100%;
 }
 img.artist_portrait {
   border: 3px solid #000;
