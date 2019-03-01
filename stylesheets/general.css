@@ -42,7 +42,9 @@ img.artist_portrait {
 }
 #div_ticketmaster_results {
   float: left;
+  height: 100%;
   width: 20%;
+  overflow: scroll;
   margin-right: 8px;
 }
 #div_ticketmaster_results p {
