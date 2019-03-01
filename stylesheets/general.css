@@ -24,11 +24,11 @@ body {
   opacity: 0.4;
 }
 #div_header h1 {
+  width: 100%;
   font-size: 300%;
   color: black;
   text-align: center;
   top: 1%;
-  left: 21%;
   position: absolute;
   z-index: 5;
 }
