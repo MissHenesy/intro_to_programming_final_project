@@ -8,18 +8,24 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/general.css" />
   </head>
   <body>
-    <h1>Welcome to Fan Central Station</h1>
-    <form id="frm_artist_search" action="">
-      <div id="div_search_artist">
-        <label for="text_artist_name">Enter the name of a band or artist:</label>
-        <input id="text_artist_name" type="text" minlength="1" maxlength="500" />
+    <div id="artist_container">
+      <h1>Welcome to Fan Central Station</h1>
+      <form id="frm_artist_search" action="">
+        <div id="div_search_artist">
+          <label for="text_artist_name">Enter the name of a band or artist:</label>
+          <input id="text_artist_name" type="text" minlength="1" maxlength="500" />
+        </div>
+        <button type="submit">Find My Artist!</button>
+      </form>
+      <div id=div_artist_container>
+        <div id="div_artist_summary">
+          <div id="div_lastfm_results"></div>
+          <div id="div_fanart_results"></div>
+        </div>
+        <div id="div_ticketmaster_results"></div>
+        <div id="div_twitter_results"></div>
+        <div id="twitter-wjs"></div>
       </div>
-      <button type="submit">Find My Artist!</button>
-    </form>
-    <div id="twitter-wjs"></div>
-    <div id="div_lastfm_results"></div>
-    <div id="div_fanart_results"></div>
-    <div id="div_ticketmaster_results"></div>
+    </div>
   </body>
-  <div id="div_jsonp_tm"></div>
 </html>
