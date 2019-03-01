@@ -16,7 +16,7 @@ From an outside-in level, an "artist fan page" might include the following::
 * A summary of the artist from "Lastfm"
 * Most recent tweets about the artist from Twitter
 * News about the artist (api TBD)
-* Tour dates for the artist (tailored to the user's location?)
-* Could use the Google Maps API for directions to the concert venue
+* Tour dates for the artist
+* An optional signup sheet for users to be kept informed about their favorite artist
 
-The admin piece is yet to be determined.
+I am still trying to come up with a plan for an admin piece, but it would be tied to the signup sheet.
