@@ -63,7 +63,7 @@ img.artist_portrait {
 #div_fanart_results {
   display: block;
   width: 100%;
-  padding: 25px 0px 25px 0px;
+  padding: 0px 0px 25px 0px;
   margin-left: 12px;
 }
 #div_fanart_results img {
