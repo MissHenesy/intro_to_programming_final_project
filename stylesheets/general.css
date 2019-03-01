@@ -30,7 +30,7 @@ img.artist_portrait {
 #div_artist_container {
   margin: 0 auto;
   width: 100%;
-  clear: both;
+  display: none;
 }
 #div_artist_summary {
   float: left;
@@ -63,7 +63,7 @@ img.artist_portrait {
 #div_fanart_results {
   display: block;
   width: 100%;
-  padding: 0px 0px 25px 0px;
+  padding: 12px 0px 25px 0px;
   margin-left: 12px;
 }
 #div_fanart_results img {
