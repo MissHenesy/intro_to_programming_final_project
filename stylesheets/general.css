@@ -2,8 +2,38 @@ body {
   font: 18px Helvetica, Arial, sans-serif;
   background-color: linen;
 }
+#div_bg_container {
+  width: 100%;
+  height: 25%;
+  position: relative;
+}
+#div_bg_container .bg {
+  border: 1px solid #c0c0c0;
+  background-image: url("../images/layout/banner_img.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  top: 0;
+  left: 0;
+  padding: 0px;
+  margin: 0px;
+  height: 140px;
+  width: 100%;
+  -webkit-filter: grayscale(65%);
+  filter: grayscale(65%);
+  opacity: 0.4;
+}
+#div_header h1 {
+  font-size: 300%;
+  color: black;
+  text-align: center;
+  top: 1%;
+  left: 21%;
+  position: absolute;
+  z-index: 5;
+}
 form {
-  margin-top: 30px;
+  margin-top: 0px;
   width: 100%;
 }
 form div {
