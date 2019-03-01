@@ -22,6 +22,10 @@ form button, form input[type="submit"] {
   font-weight: bold;
   font-size: 100%;
 }
+form .error {
+  color: #ff0000;
+  font-weight: bold;
+}
 img.artist_portrait {
   border: 3px solid #000;
   height: 175px;
