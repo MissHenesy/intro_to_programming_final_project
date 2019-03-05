@@ -1,0 +1,30 @@
+{
+  "name": "programming_final_project",
+  "version": "1.0.0",
+  "description": "This repository stores all files related to the Final Project for the Berklee Online course, \"Introduction to Computer Programming for Musicians\".",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MissHenesy/intro_to_programming_final_project.git"
+  },
+  "keywords": [
+    "programming",
+    "final",
+    "project"
+  ],
+  "author": "Susan Henesy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MissHenesy/intro_to_programming_final_project/issues"
+  },
+  "homepage": "https://github.com/MissHenesy/intro_to_programming_final_project#readme",
+  "devDependencies": {
+    "jasmine": "^3.3.1"
+  },
+  "dependencies": {
+    "dotenv": "^6.2.0"
+  }
+}
