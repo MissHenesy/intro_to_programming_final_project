@@ -153,7 +153,7 @@ function display_tweets(artist_val)
   if (div_content.length > 0)
   {
     div_twitter.append("<h2>Recent Tweets</h2>");
-    div_twitter.append("<small><i>Note: These are stunt tweets ... API authentication is pending</i></small>");
+    div_twitter.append("<small><i>Note: These are test tweets; API authentication is pending</i></small>");
     div_twitter.append(div_content);
     div_twitter.show();
   }
