@@ -1,1 +1,3 @@
 scripts/env.js
+node_modules/
+config.js
