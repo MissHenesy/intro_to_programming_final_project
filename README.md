@@ -11,11 +11,11 @@ The search reaches out to several APIs to pull in various content about the arti
 
 From an outside-in level, each "artist fan page" includes the following::
 
-* [DONE!] Random art from the "fan.art.tv" site
-* [DONE!] Top 10 songs from the artist, pulled in from the "musixmatch" site
-* [DONE!] A summary of the artist from "Lastfm"
-* [DONE!] Tour dates for the artist (from the "Ticketmaster" API)
-* [IN PROGRESS] An optional signup sheet for users to be kept informed about their favorite artist
+* [DONE!] Random art from the "fan.art.tv" API
+* [DONE!] Top 10 songs from the artist, pulled in from the "musixmatch" API
+* [DONE!] A summary of the artist from the "Lastfm" API
+* [DONE!] Tour dates for the artist (from the "Ticketmaster" API
+* [IN PROGRESS] A signup sheet for users to be kept informed about their favorite artist
 
 **THINGS LEFT TO DO**
 * Add links to API sites where contractually necessary
