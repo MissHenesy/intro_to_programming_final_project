@@ -18,6 +18,8 @@ From an outside-in level, each "artist fan page" includes the following::
 * [IN PROGRESS] An optional signup sheet for users to be kept informed about their favorite artist
 
 **THINGS LEFT TO DO**
+* Add links to API sites where contractually necessary
+  - Let's face it, no one likes getting sued
 * Add names and email addresses to a database
   - I've got a sign up sheet, now all I need to do is connect it to an API data store and start collecting information. But first I need to get authentication! I'll send another request in that direction.
 * Most recent tweets about the artist from Twitter
