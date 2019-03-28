@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Fan Central Station</title>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/env.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="scripts/twitter.js"></script>
+    <script language="javascript" src="scripts/final_project.js"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheets/general.css" />
+  </head>
+  <body>
+    <div id="div_bg_container">
+      <div class="bg"></div>
+      <div id="div_header"><h1>Welcome to Fan Central Station</h1></div>
+    </div>
+    <div id="div_container">
+      <form id="frm_artist_search">
+        <div id="div_search_artist">
+          <label for="txt_artist_name">Enter the name of a band or artist:</label>
+          <input id="txt_artist_name" type="text" minlength="1" maxlength="500" required /><br />
+        </div>
+        <button id="btn_submit" type="submit" disabled>Find My Artist!</button>
+      </form>
+      <div id=div_artist_container>
+        <hr>
+        <div id="div_artist_summary">
+          <div id="div_lastfm_results"></div>
+          <div id="div_fanart_results"></div>
+        </div>
+        <div id="div_ticketmaster_results"></div>
+        <div id="div_twitter_results"></div>
+        <div id="twitter-wjs"></div>
+      </div>
+    </div>
+  </body>
+</html>

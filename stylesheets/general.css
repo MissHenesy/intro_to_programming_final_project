@@ -1,7 +1,49 @@
 body {
   font: 18px Helvetica, Arial, sans-serif;
-  background-color: linen;
+  background-color: #faf0e6;
 }
+/* General/all-purpose styles */
+img.artist_portrait {
+  border: 3px solid #000;
+  height: 175px;
+  margin: 0px 20px 20px 0px;;
+}
+.hidden {
+  display: none;
+}
+input {
+  font: inherit;
+}
+/* Enter Artist Name Form */
+.search_form {
+  margin-top: 0px;
+  width: 100%;
+}
+.search_form div {
+  margin-bottom: 12px;
+}
+.search_form input[type="text"] {
+  width: 300px;
+  font-size: 80%;
+}
+.search_form label {
+  margin-right: 12px;
+}
+.search_form button, form input[type="submit"] {
+  height: 40px;
+  width: 180px;
+  font-weight: bold;
+  font-size: 100%;
+}
+.search_form .error {
+  color: #ff0000;
+  font-weight: bold;
+}
+.search_form button {
+  font-size: 100%;
+}
+
+/* Page Divs */
 #div_bg_container {
   width: 100%;
   height: 25%;
@@ -32,35 +74,6 @@ body {
   position: absolute;
   z-index: 5;
 }
-form {
-  margin-top: 0px;
-  width: 100%;
-}
-form div {
-  margin-bottom: 12px;
-}
-form input[type="text"] {
-  width: 300px;
-  font-size: 80%;
-}
-form label {
-  margin-right: 12px;
-}
-form button, form input[type="submit"] {
-  height: 40px;
-  width: 180px;
-  font-weight: bold;
-  font-size: 100%;
-}
-form .error {
-  color: #ff0000;
-  font-weight: bold;
-}
-img.artist_portrait {
-  border: 3px solid #000;
-  height: 175px;
-  margin: 0px 20px 20px 0px;;
-}
 #div_artist_container {
   margin: 0 auto;
   width: 100%;
@@ -84,14 +97,23 @@ img.artist_portrait {
 #div_ticketmaster_results p {
   font-size: 80%;
 }
-#div_twitter_results {
+#div_musixmatch_results {
   float: left;
   width: 20%;
 }
-#div_twitter_results p {
+#div_musixmatch_results ol {
   font-size: 80%;
+  font-weight: bold;
 }
-#div_twitter_results .twitter_user_name {
+#div_musixmatch_results ol ul {
+  margin-left: 8px;
+  padding-left: 0px;
+  font-weight: normal;
+  font-style: italic;
+  font-size: 90%;
+  list-style-type: none;
+}
+#div_musixmatch_results .twitter_user_name {
   color: #657786;
 }
 #div_fanart_results {
@@ -104,3 +126,53 @@ img.artist_portrait {
   height: 150px;
   padding: 12px 3px 12px 12px;
 }
+
+/* Modal Sign Up Form */
+.sign_up_form.modal {
+  border-radius: 0;
+  line-height: 18px;
+  padding: 0;
+}
+.sign_up_form h3 {
+  margin: 0;
+  padding: 10px;
+  color: #fff;
+  font-size: 14px;
+  background: -moz-linear-gradient(top, #ab1d1d, #4c0707);
+  background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #4c0707),color-stop(1, #ab1d1d));
+}
+.sign_up_form h4 {
+  padding-left: 20px;
+}
+.sign_up_form.modal p { padding: 20px 30px; border-bottom: 1px solid #ddd; margin: 0;
+  background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #faf0e6),color-stop(1, #ffffffab));
+  overflow: hidden;
+}
+.sign_up_form.modal p:last-child { border: none; }
+.sign_up_form.modal p label { float: left; font-weight: bold; color: #333; font-size: 13px; width: 110px; line-height: 22px; }
+.sign_up_form.modal p input[type="text"],
+.sign_up_form.modal p input[type="email"] {
+  font-size: normal 14px/20px;
+  padding: 3px;
+  border: 1px solid #ddd;
+  width: 250px;
+  height: 30px;
+}
+.sign_up_form.modal p input[type="submit"] {
+  font-size: 18px;
+  background-color: #c0c0c091;
+}
+.part {
+  display: none;
+}
+.modal p { margin: 1em 0; }
+.modal a.close-modal { border: none; }
+
+@media(max-width: 600px) {
+  html {
+    font-size: 14px;
+  }
+  h2 a { display: block; margin-bottom: 0.5em; }
+  pre { font-size: 11px; line-height: 1.5; }
+  pre code { padding: 5px; }
+  a.btn { display: block; text-align: center; padding: 1rem; }

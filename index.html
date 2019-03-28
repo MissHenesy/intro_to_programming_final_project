@@ -4,8 +4,12 @@
     <title>Fan Central Station</title>
     <script src="scripts/app.js"></script>
     <script src="scripts/env.js"></script>
+    <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="scripts/twitter.js"></script>
+    <!-- jQuery Modal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <!-- Project Links -->
     <script language="javascript" src="scripts/final_project.js"></script>
     <link rel="stylesheet" type="text/css" href="stylesheets/general.css" />
   </head>
@@ -15,7 +19,7 @@
       <div id="div_header"><h1>Welcome to Fan Central Station</h1></div>
     </div>
     <div id="div_container">
-      <form id="frm_artist_search">
+      <form id="frm_artist_search" class="search_form">
         <div id="div_search_artist">
           <label for="txt_artist_name">Enter the name of a band or artist:</label>
           <input id="txt_artist_name" type="text" minlength="1" maxlength="500" required /><br />
@@ -24,14 +28,39 @@
       </form>
       <div id=div_artist_container>
         <hr>
+        <div id="div_artist_signup">
+          <p>
+          Want to receive alerts about this artist?
+          <a class="btn" href="#sign_up_form" rel="modal:open">Sign me up!</a>
+          </p>
+        </div>
         <div id="div_artist_summary">
           <div id="div_lastfm_results"></div>
           <div id="div_fanart_results"></div>
         </div>
         <div id="div_ticketmaster_results"></div>
-        <div id="div_twitter_results"></div>
-        <div id="twitter-wjs"></div>
+        <div id="div_musixmatch_results"></div>
       </div>
     </div>
+    <!--// Dialog Box for Sign Up -->
+    <form action="" class="sign_up_form modal hidden" id="sign_up_form">
+      <h3>Enter your information</h3>
+      <h4>Yes! Send me alerts about <span id="sp_artist_name"></span></h4>
+        <p>
+          <label for="fld_fname">First Name:</label>
+          <input id="fld_fname" type="text" />
+        </p>
+        <p>
+          <label for="fld_lname">Last Name:</label>
+          <input id="fld_lname" type="text" />
+        </p>
+        <p>
+          <label for="fld_email">Email:</label>
+          <input id="fld_email" type="email" />
+        </p>
+        <p>
+          <input type="submit" value="Sign up!" />
+        </p>
+    </form>
   </body>
 </html>
