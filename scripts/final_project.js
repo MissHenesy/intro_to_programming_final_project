@@ -185,18 +185,6 @@ function display_top_hits(artist_val)
       }
     }
   );
-
-  // fetch(api_url)
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     if (data.body.track_list)
-  //     {
-  //       console.log("yay!");
-  //     }
-  //   }).catch(err => {
-  //     console.log("Oops! An unexpected error occurred: " + err.message);
-  //   })
-
 }
 
 function display_art(artist_val, artist_mbid)
