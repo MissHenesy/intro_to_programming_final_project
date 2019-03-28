@@ -1,8 +1,8 @@
+/* General/all-purpose styles */
 body {
   font: 18px Helvetica, Arial, sans-serif;
   background-color: #faf0e6;
 }
-/* General/all-purpose styles */
 img.artist_portrait {
   border: 3px solid #000;
   height: 175px;
@@ -14,7 +14,7 @@ img.artist_portrait {
 input {
   font: inherit;
 }
-/* Enter Artist Name Form */
+/* Search Form */
 .search_form {
   margin-top: 0px;
   width: 100%;
@@ -42,7 +42,6 @@ input {
 .search_form button {
   font-size: 100%;
 }
-
 /* Page Divs */
 #div_bg_container {
   width: 100%;
@@ -126,7 +125,6 @@ input {
   height: 150px;
   padding: 12px 3px 12px 12px;
 }
-
 /* Modal Sign Up Form */
 .sign_up_form.modal {
   border-radius: 0;
