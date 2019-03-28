@@ -76,7 +76,6 @@ input {
 #div_artist_container {
   margin: 0 auto;
   width: 100%;
-  display: none;
 }
 #div_artist_summary {
   float: left;
