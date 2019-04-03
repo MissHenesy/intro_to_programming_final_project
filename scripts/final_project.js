@@ -1,58 +1,104 @@
-//================================================================================
+//=============================================================================
 // CONSTANTS / GLOBAL VARIABLES
-//================================================================================
+//=============================================================================
 const API_URL_TICKETMASTER = "https://app.ticketmaster.com/discovery/v2/events.json?sort=date,asc&apikey=" + API_KEY_TICKETMASTER;
 const API_URL_MUSIXMATCH = "https://api.musixmatch.com/ws/1.1/track.search?page_size=10&page=1&format=jsonp&callback=callback&s_track_rating=desc&apikey=" + API_KEY_MUSIXMATCH;
 const API_URL_FANART = "http://webservice.fanart.tv/v3/music/"
 const API_URL_LASTFM = "http://ws.audioscrobbler.com/2.0/?autocorrect=1&format=json&api_key=" + API_KEY_LASTFM;
-//================================================================================
+//=============================================================================
 $("document").ready(function()
   {
-    submit_search();
+    attach_dom_events();
   }
 );
-
-function submit_search()
+//-----------------------------------------------------------------------------
+function attach_dom_events()
 {
-  $("#txt_artist_name").mouseleave(function()
+  $("#fld_artist_name").mouseleave(function()
     {
       validate_input();
     }
   );
-  $("#txt_artist_name").keyup(function()
+  $("#fld_artist_name").keyup(function()
     {
       validate_input();
     }
   );
 
-  $("form").submit(function(event)
+  $("#frm_artist_search").submit(function(event)
     {
-      let artist_val = $("#txt_artist_name").val().replace("&","and");
+      event.preventDefault();
+      let artist_val = $("#fld_artist_name").val().replace("&","and");
       artist_val = strip_non_alphanum_chars(artist_val);
       find_artist_info(artist_val);
+    }
+  );
+
+  $("a[href='#frm_sign_up']").click(function(event) {
+    event.preventDefault();
+    $(this).modal({
+      fadeDuration: 500,
+      fadeDelay: 0.50
+    });
+  });
+
+  $("#frm_sign_up").submit(function(event)
+    {
       event.preventDefault();
+      let result_txt,
+          class_type;
+
+      if (sign_up_newsletter())
+      {
+        result_text = "Thanks for signing up!";
+        $("#p_sign_up_message").removeClass("error_msg");
+        class_type = "success_msg";
+      } else {
+        result_text = "Our records indicate that <u>" + $("#fld_email").val() +
+                      "</u> is already receiving alerts for " +
+                      $("#hdn_artist_name").val();
+        $("#p_sign_up_message").removeClass("success_msg");
+        class_type = "error_msg";
+      }
+
+      $("#p_sign_up_message").removeClass(class_type).addClass(class_type);
+      $("#p_sign_up_message").html(result_text);
+    }
+  );
+
+  $("#frm_sign_up").on($.modal.BEFORE_CLOSE, function(event, modal)
+    {
+      $("#frm_sign_up :input").each(function()
+        {
+          $(this).val("");
+        }
+      );
+      $("#frm_sign_up #p_sign_up_message").html("");
     }
   );
 }
-
+//-----------------------------------------------------------------------------
 function find_artist_info(artist_val)
 {
-  display_lastfm_info(artist_val);
+  artist_mbid = display_lastfm_info(artist_val);
   display_ticketmaster_info(artist_val);
   display_top_hits(artist_val);
 }
-
+//-----------------------------------------------------------------------------
 function display_lastfm_info(artist_val)
 {
   let api_url = API_URL_LASTFM + "&method=artist.getInfo&artist=" + artist_val;
   let div_artist_summary = $("#div_artist_summary");
   let div_lastfm = $("#div_lastfm_results");
+  let hdn_artist_mbid;
   let div_content;
   let bln_content_exists = false;
   let artist_name;
   let artist_mbid;
 
   div_lastfm.empty();
+  $("#div_artist_container #hdn_artist_name").val("");
+  $("#div_artist_container #hdn_artist_mbid").val("");
   $.getJSON(api_url, function(json) {
     if (json.artist)
     {
@@ -67,6 +113,8 @@ function display_lastfm_info(artist_val)
     }
     if (bln_content_exists)
     {
+        $("#div_artist_container #hdn_artist_name").val(artist_name);
+        $("#div_artist_container #hdn_artist_mbid").val(artist_mbid);
         $("#div_artist_signup").show();
         $("#sp_artist_name").text(artist_name);
         div_content = "<h2>About " + artist_name + "</h2>";
@@ -87,7 +135,7 @@ function display_lastfm_info(artist_val)
     display_art(artist_val, artist_mbid);
   });
 }
-
+//-----------------------------------------------------------------------------
 function display_ticketmaster_info(artist_val)
 {
   let api_url = API_URL_TICKETMASTER +
@@ -128,7 +176,7 @@ function display_ticketmaster_info(artist_val)
       console.log("Oops! An unexpected error occurred: " + err.message);
     });
 }
-
+//-----------------------------------------------------------------------------
 function display_top_hits(artist_val)
 {
   let div_content = "";
@@ -172,7 +220,7 @@ function display_top_hits(artist_val)
     }
   );
 }
-
+//-----------------------------------------------------------------------------
 function display_art(artist_val, artist_mbid)
 {
   let img_fanart;
@@ -215,6 +263,261 @@ function display_art(artist_val, artist_mbid)
     );
   }
 }
+//-----------------------------------------------------------------------------
+function sign_up_newsletter()
+{
+  let artist_name = $("#hdn_artist_name").val(),
+      artist_mbid = $("#hdn_artist_mbid").val(),
+      user_fname = $("#fld_fname").val(),
+      user_lname = $("#fld_lname").val(),
+      user_email = $("#fld_email").val(),
+      user_id = getUserID(user_email),
+      artist_id = getArtistID(artist_mbid),
+      signup_id = getSignupID(user_id, artist_id),
+      result = false;
+
+  if (!user_id)
+  {
+    user_id = createUserID(user_fname, user_lname, user_email);
+  }
+  if (!artist_id)
+  {
+    artist_id = createArtistID(artist_name, artist_mbid);
+  }
+  if (signup_id)
+  {
+    result = false;
+  } else {
+    signup_id = createSignupID(user_id, artist_id)
+    if (signup_id)
+    {
+      result = true;
+    }
+  }
+  return result;
+}
+//-----------------------------------------------------------------------------
+function getUserID(user_email)
+{
+  let result = null;
+  let user_data = function() {
+    let arr_info = null;
+    $.ajax({
+      async: false,
+      url: `https://itp.patrickmcneill.com/where/persons/email/${user_email}`,
+      method: "GET",
+      headers: { key: API_KEY_DATABASE },
+      success: function(result) {
+        if (result.length > 0)
+        {
+          // The API will return an array of objects. Make sure
+          // get the last one ... in our real application, we will
+          // use our own database and ensure relationships and keys
+          // are set up properly, so no need to worry about
+          // data integrity here.
+          arr_info = result.slice(-1);
+        }
+      },
+      error: function(err) {
+        console.log("Failed: " + err.responseText);
+      }
+    });
+    return arr_info;
+  }();
+
+  if (user_data)
+  {
+    result = user_data[0].id;
+  }
+  return result;
+}
+//-----------------------------------------------------------------------------
+function getArtistID(artist_mbid)
+{
+  let result = null;
+  let artist_data = function() {
+    let arr_info = null;
+    $.ajax({
+      async: false,
+      url: `https://itp.patrickmcneill.com/where/artists/artist_mbid/${artist_mbid}`,
+      method: "GET",
+      headers: { key: API_KEY_DATABASE },
+      success: function(result) {
+        if (result.length > 0)
+        {
+          arr_info = result.slice(-1);
+        }
+      },
+      error: function(err) {
+        console.log("Failed: " + err.responseText);
+      }
+    });
+    return arr_info;
+  }();
+
+  if (artist_data)
+  {
+    result = artist_data[0].id;
+  }
+  return result;
+}
+//-----------------------------------------------------------------------------
+function getSignupID(user_id, artist_id)
+{
+  let signup_id = null;
+  let signup_data = function() {
+    let arr_info = null;
+    $.ajax({
+      async: false,
+      url: `https://itp.patrickmcneill.com/where/alert_signups/person_id/${user_id}`,
+      method: "GET",
+      headers: { key: API_KEY_DATABASE },
+      success: function(result) {
+        if (result.length > 0)
+        {
+          arr_info = result;
+        }
+      },
+      error: function(err) {
+        console.log("Failed: " + err.responseText);
+      }
+    });
+      return arr_info;
+    }();
+
+  if (signup_data)
+  {
+    for (let i of signup_data)
+    {
+      if (i.artist_id == artist_id)
+      {
+        signup_id = i.id;
+        break;
+      }
+    }
+  }
+  return signup_id;
+}
+//-----------------------------------------------------------------------------
+function createUserID(user_fname, user_lname, user_email)
+{
+  console.log("Creating new Person record for... " + user_email.trim());
+  let user_id = null,
+      result = null;
+
+  user_id = getUserID(user_email.trim());
+
+  if (user_id)
+  {
+    result = user_id;
+  } else {
+    let user_data = function() {
+      $.ajax({
+        async: false,
+        url: "https://itp.patrickmcneill.com/data/persons",
+        method: "POST",
+        headers: { key: API_KEY_DATABASE },
+        data: {
+          first_name: user_fname,
+          last_name: user_lname,
+          name: `${user_fname} ${user_lname}`,
+          email: user_email,
+          created_date: Date.now(),
+          last_modified_date: Date.now()
+        },
+        success: function(result) {
+          user_id = result.id;
+          console.log("Successfully created record for " + user_email);
+        },
+        error: function(err) {
+          console.log("Failed: " + err.responseText);
+        }
+      });
+      return user_id;
+    }();
+  }
+
+  console.log("User ID is: " + user_id);
+  return user_id;
+}
+//-----------------------------------------------------------------------------
+function createArtistID(artist_name, artist_mbid)
+{
+  console.log("Creating new Artist record for... " + artist_name.trim());
+  let artist_id = null,
+      result = null;
+
+  artist_id = getArtistID(artist_mbid);
+
+  if (artist_id)
+  {
+    result = artist_id;
+  } else {
+    let artist_data = function() {
+      $.ajax({
+        async: false,
+        url: "https://itp.patrickmcneill.com/data/artists",
+        method: "POST",
+        headers: { key: API_KEY_DATABASE },
+        data: {
+          artist_name: artist_name,
+          artist_mbid: artist_mbid,
+          created_date: Date.now(),
+          last_modified_date: Date.now()
+        },
+        success: function(result) {
+          artist_id = result.id;
+          console.log("Successfully created record for " + artist_name);
+        },
+        error: function(err) {
+          console.log("Failed: " + err.responseText);
+        }
+      });
+      return artist_id;
+    }();
+  }
+
+  console.log("Artist ID is: " + artist_id);
+  return artist_id;
+}
+//-----------------------------------------------------------------------------
+function createSignupID(user_id, artist_id)
+{
+  console.log("Creating new Signup record...");
+  let signup_id = null,
+      result = null;
+
+  if (signup_id)
+  {
+    result = signup_id;
+  } else {
+    let signup_data = function() {
+      $.ajax({
+        async: false,
+        url: "https://itp.patrickmcneill.com/data/alert_signups",
+        method: "POST",
+        headers: { key: API_KEY_DATABASE },
+        data: {
+          person_id: user_id,
+          artist_id: artist_id,
+          created_date: Date.now(),
+          last_modified_date: Date.now()
+        },
+        success: function(result) {
+          signup_id = result.id;
+          console.log("Successfully created new signup!");
+        },
+        error: function(err) {
+          console.log("Failed: " + err.responseText);
+        }
+      });
+      return signup_id;
+    }();
+  }
+
+  console.log("Signup ID is: " + signup_id);
+  return signup_id;
+}
 //================================================================================
 // HELPER FUNCTIONS
 //================================================================================
@@ -256,7 +559,8 @@ function format_time(time_val)
   return result;
 }
 //-----------------------------------------------------------------------------
-function urlify(text) {
+function urlify(text)
+{
     var urlRegex = /(https?:\/\/[^\s]+)/g;
     return text.replace(urlRegex, function(url)
       {
@@ -283,17 +587,17 @@ function get_random_image()
   let num = Math.floor(Math.random() * random_images.length);
   let img = random_images[num];
 
-   return dir + img;
+  return dir + img;
 }
 //-----------------------------------------------------------------------------
 function validate_input()
 {
-  let str_input = $("#txt_artist_name").val();
+  let str_input = $("#fld_artist_name").val();
   if (str_input.length > 0)
   {
-    $("#btn_submit").attr("disabled", false);
+    $("#btn_artist_search").attr("disabled", false);
   } else {
-    $("#btn_submit").attr("disabled", true);
+    $("#btn_artist_search").attr("disabled", true);
   }
 }
 //-----------------------------------------------------------------------------

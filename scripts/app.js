@@ -1,3 +1,4 @@
+let API_KEY_DATABASE = "";
 let API_KEY_TICKETMASTER = "";
 let API_KEY_MUSIXMATCH = "";
 let API_KEY_TWITTER = "";

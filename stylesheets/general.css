@@ -14,6 +14,23 @@ img.artist_portrait {
 input {
   font: inherit;
 }
+h3 {
+  font-size: 120%;
+  font-weight: bold;
+  text-align: center;
+}
+button, form input[type="submit"] {
+  height: 40px;
+  width: 180px;
+  font-weight: bold;
+  font-size: 100%;
+}
+.success_msg {
+  color: #ff0000;
+}
+.error_msg {
+  color: #000000;
+}
 /* Search Form */
 .search_form {
   margin-top: 0px;
@@ -28,12 +45,6 @@ input {
 }
 .search_form label {
   margin-right: 12px;
-}
-.search_form button, form input[type="submit"] {
-  height: 40px;
-  width: 180px;
-  font-weight: bold;
-  font-size: 100%;
 }
 .search_form .error {
   color: #ff0000;
@@ -126,6 +137,16 @@ input {
 }
 /* Modal Sign Up Form */
 .sign_up_form.modal {
+  background-color: #e6e3c1fc;
+}
+.sign_up_form #p_sign_up_message {
+  font-size: 85%;
+  font-weight: bold;
+}
+
+
+/*
+.sign_up_form.modal {
   border-radius: 0;
   line-height: 18px;
   padding: 0;
@@ -155,10 +176,6 @@ input {
   width: 250px;
   height: 30px;
 }
-.sign_up_form.modal p input[type="submit"] {
-  font-size: 18px;
-  background-color: #c0c0c091;
-}
 .part {
   display: none;
 }
@@ -173,3 +190,4 @@ input {
   pre { font-size: 11px; line-height: 1.5; }
   pre code { padding: 5px; }
   a.btn { display: block; text-align: center; padding: 1rem; }
+*/

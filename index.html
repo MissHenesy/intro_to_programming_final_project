@@ -21,17 +21,19 @@
     <div id="div_container">
       <form id="frm_artist_search" class="search_form">
         <div id="div_search_artist">
-          <label for="txt_artist_name">Enter the name of a band or artist:</label>
-          <input id="txt_artist_name" type="text" minlength="1" maxlength="500" required /><br />
+          <label for="fld_artist_name">Enter the name of a band or artist:</label>
+          <input id="fld_artist_name" type="text" minlength="1" maxlength="500" required /><br />
         </div>
-        <button id="btn_submit" type="submit" disabled>Find My Artist!</button>
+        <button id="btn_artist_search" type="submit" disabled>Find My Artist!</button>
       </form>
       <div id="div_artist_container" class="hidden">
         <hr>
+        <input id="hdn_artist_name" type="hidden" />
+        <input id="hdn_artist_mbid" type="hidden" />
         <div id="div_artist_signup">
           <p>
           Want to receive alerts about this artist?
-          <a class="btn" href="#sign_up_form" rel="modal:open">Sign me up!</a>
+          <a class="btn" href="#frm_sign_up">Sign me up!</a>
           </p>
         </div>
         <div id="div_artist_summary">
@@ -43,24 +45,25 @@
       </div>
     </div>
     <!--// Dialog Box for Sign Up -->
-    <form action="" class="sign_up_form modal hidden" id="sign_up_form">
-      <h3>Enter your information</h3>
-      <h4>Yes! Send me alerts about <span id="sp_artist_name"></span></h4>
+    <form id="frm_sign_up" action="" class="sign_up_form modal hidden">
+      <h3>Yes! Send me alerts about <span id="sp_artist_name"></span></h3>
+      <hr>
         <p>
           <label for="fld_fname">First Name:</label>
-          <input id="fld_fname" type="text" />
+          <input id="fld_fname" type="text" required />
         </p>
         <p>
           <label for="fld_lname">Last Name:</label>
-          <input id="fld_lname" type="text" />
+          <input id="fld_lname" type="text" required />
         </p>
         <p>
           <label for="fld_email">Email:</label>
-          <input id="fld_email" type="email" />
+          <input id="fld_email" type="email" required />
         </p>
         <p>
-          <input type="submit" value="Sign up!" />
+          <button id="btn_sign_up" type="submit">Sign up!</button>
         </p>
+        <p id="p_sign_up_message"></p>
     </form>
   </body>
 </html>
