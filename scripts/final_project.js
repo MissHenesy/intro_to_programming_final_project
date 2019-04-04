@@ -45,24 +45,7 @@ function attach_dom_events()
   $("#frm_sign_up").submit(function(event)
     {
       event.preventDefault();
-      let result_txt,
-          class_type;
-
-      if (sign_up_newsletter())
-      {
-        result_text = "Thanks for signing up!";
-        $("#p_sign_up_message").removeClass("error_msg");
-        class_type = "success_msg";
-      } else {
-        result_text = "Our records indicate that <u>" + $("#fld_email").val() +
-                      "</u> is already receiving alerts for " +
-                      $("#hdn_artist_name").val();
-        $("#p_sign_up_message").removeClass("success_msg");
-        class_type = "error_msg";
-      }
-
-      $("#p_sign_up_message").removeClass(class_type).addClass(class_type);
-      $("#p_sign_up_message").html(result_text);
+      sign_up_handler();
     }
   );
 
@@ -73,7 +56,7 @@ function attach_dom_events()
           $(this).val("");
         }
       );
-      $("#frm_sign_up #p_sign_up_message").html("");
+      $("#frm_sign_up #p_sign_up_message").removeClass().html("");
     }
   );
 }
@@ -264,31 +247,152 @@ function display_art(artist_val, artist_mbid)
   }
 }
 //-----------------------------------------------------------------------------
-function sign_up_newsletter()
+function sign_up_handler()
 {
-  let artist_name = $("#hdn_artist_name").val(),
-      artist_mbid = $("#hdn_artist_mbid").val(),
-      user_fname = $("#fld_fname").val(),
-      user_lname = $("#fld_lname").val(),
-      user_email = $("#fld_email").val(),
-      user_id = getUserID(user_email),
-      artist_id = getArtistID(artist_mbid),
-      signup_id = getSignupID(user_id, artist_id),
+  let artist_mbid = $("#hdn_artist_mbid").val(),
+      person_email = $("#fld_email").val(),
       result = false;
 
-  if (!user_id)
+  // Nice example of how Promises and Ajax work together can be found here::
+  // https://tylermcginnis.com/async-javascript-from-callbacks-to-promises-to-async-await/
+  await_getAllIDs(person_email, artist_mbid)
+    .then(await_createSignUp)
+    .then(display_sign_up_results)
+    .catch(err => { console.log(err) });
+}
+//-----------------------------------------------------------------------------
+async function await_getAllIDs(person_email, artist_mbid)
+{
+    let promises = [];
+    let p1 = getPersonID(person_email);
+    let p2 = getArtistID(artist_mbid);
+    let p3 = null;
+    let result = null;
+
+    promises.push(p1,p2);
+    result = await Promise.all(promises);
+    if (result[0] && result[1])
+    {
+      p3 = await getSignupID(result[0], result[1]);
+    }
+    result.push(p3);
+    return result;
+}
+//-----------------------------------------------------------------------------
+function display_sign_up_results(bln_new_sign_up)
+{
+  let result_txt,
+      class_type;
+
+  if (bln_new_sign_up)
   {
-    user_id = createUserID(user_fname, user_lname, user_email);
+    result_text = "Awesome, you're all signed up!";
+    class_type = "success_msg";
+  } else {
+    result_text = "Nothing to do here!<br /> Our records indicate that <u>" +
+                  $("#fld_email").val() + "</u> is already receiving " +
+                  "alerts about " + $("#hdn_artist_name").val();
+    class_type = "error_msg";
+  }
+  $("#p_sign_up_message").removeClass().addClass(class_type);
+  $("#p_sign_up_message").html(result_text);
+}
+//================================================================================
+// DATABASE FUNCTIONS
+//================================================================================
+function getPersonID(person_email)
+{
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: `https://itp.patrickmcneill.com/where/persons/email/${person_email}`,
+      method: "GET",
+      headers: { key: API_KEY_DATABASE },
+      success: function(response) {
+        if (response.length > 0)
+        {
+          resolve(response.slice(-1)[0].id);
+        } else {
+          resolve(null);
+        }
+      },
+      error: reject
+    });
+  });
+}
+//-----------------------------------------------------------------------------
+function getArtistID(artist_mbid)
+{
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: `https://itp.patrickmcneill.com/where/artists/artist_mbid/${artist_mbid}`,
+      method: "GET",
+      headers: { key: API_KEY_DATABASE },
+      success: function(response) {
+        if (response.length > 0)
+        {
+          resolve(response.slice(-1)[0].id);
+        } else {
+          resolve(null);
+        }
+      },
+      error: reject
+    });
+  });
+}
+//-----------------------------------------------------------------------------
+function getSignupID(person_id, artist_id)
+{
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: `https://itp.patrickmcneill.com/where/persons_artists_signups/person_id/${person_id}`,
+      method: "GET",
+      headers: { key: API_KEY_DATABASE },
+      success: function(response) {
+        let result = null;
+        for (let i of response)
+        {
+          if (i.artist_id == artist_id)
+          {
+            result = i.id;
+            break;
+          }
+        }
+        resolve(result);
+      },
+      error: reject
+    });
+  });
+}
+//-----------------------------------------------------------------------------
+async function await_createSignUp(ids)
+{
+  let person_id = ids[0],
+      artist_id = ids[1],
+      signup_id = ids[2],
+      artist_name = $("#hdn_artist_name").val(),
+      artist_mbid = $("#hdn_artist_mbid").val(),
+      person_fname = $("#fld_fname").val(),
+      person_lname = $("#fld_lname").val(),
+      person_email = $("#fld_email").val(),
+      result = false;
+
+  if (!person_id)
+  {
+    let person = await await_createPersonID(person_fname, person_lname, person_email);
+    person_id = person.id;
+    console.log(`Created person_id: ${person_id}`);
   }
   if (!artist_id)
   {
-    artist_id = createArtistID(artist_name, artist_mbid);
+    let artist = await await_createArtistID(artist_name, artist_mbid);
+    artist_id = artist.id;
+    console.log(`Created artist_id: ${artist_id}`);
   }
-  if (signup_id)
+  if (!signup_id && person_id && artist_id)
   {
-    result = false;
-  } else {
-    signup_id = createSignupID(user_id, artist_id)
+    let signup = await await_createSignupID(person_id, artist_id);
+    signup_id = signup.id;
+    console.log(`Created signup_id: ${signup_id} using person_id ${person_id} and artist_id ${artist_id}.`);
     if (signup_id)
     {
       result = true;
@@ -297,226 +401,87 @@ function sign_up_newsletter()
   return result;
 }
 //-----------------------------------------------------------------------------
-function getUserID(user_email)
+async function await_createPersonID(person_fname, person_lname, person_email)
 {
-  let result = null;
-  let user_data = function() {
-    let arr_info = null;
-    $.ajax({
-      async: false,
-      url: `https://itp.patrickmcneill.com/where/persons/email/${user_email}`,
-      method: "GET",
-      headers: { key: API_KEY_DATABASE },
-      success: function(result) {
-        if (result.length > 0)
-        {
-          // The API will return an array of objects. Make sure
-          // get the last one ... in our real application, we will
-          // use our own database and ensure relationships and keys
-          // are set up properly, so no need to worry about
-          // data integrity here.
-          arr_info = result.slice(-1);
-        }
-      },
-      error: function(err) {
-        console.log("Failed: " + err.responseText);
-      }
-    });
-    return arr_info;
-  }();
-
-  if (user_data)
-  {
-    result = user_data[0].id;
-  }
-  return result;
-}
-//-----------------------------------------------------------------------------
-function getArtistID(artist_mbid)
-{
-  let result = null;
-  let artist_data = function() {
-    let arr_info = null;
-    $.ajax({
-      async: false,
-      url: `https://itp.patrickmcneill.com/where/artists/artist_mbid/${artist_mbid}`,
-      method: "GET",
-      headers: { key: API_KEY_DATABASE },
-      success: function(result) {
-        if (result.length > 0)
-        {
-          arr_info = result.slice(-1);
-        }
-      },
-      error: function(err) {
-        console.log("Failed: " + err.responseText);
-      }
-    });
-    return arr_info;
-  }();
-
-  if (artist_data)
-  {
-    result = artist_data[0].id;
-  }
-  return result;
-}
-//-----------------------------------------------------------------------------
-function getSignupID(user_id, artist_id)
-{
-  let signup_id = null;
-  let signup_data = function() {
-    let arr_info = null;
-    $.ajax({
-      async: false,
-      url: `https://itp.patrickmcneill.com/where/alert_signups/person_id/${user_id}`,
-      method: "GET",
-      headers: { key: API_KEY_DATABASE },
-      success: function(result) {
-        if (result.length > 0)
-        {
-          arr_info = result;
-        }
-      },
-      error: function(err) {
-        console.log("Failed: " + err.responseText);
-      }
-    });
-      return arr_info;
-    }();
-
-  if (signup_data)
-  {
-    for (let i of signup_data)
-    {
-      if (i.artist_id == artist_id)
-      {
-        signup_id = i.id;
-        break;
-      }
-    }
-  }
-  return signup_id;
-}
-//-----------------------------------------------------------------------------
-function createUserID(user_fname, user_lname, user_email)
-{
-  console.log("Creating new Person record for... " + user_email.trim());
-  let user_id = null,
+  console.log("---------------------------------------------------------");
+  console.log("Creating new Person record for... " + person_email.trim());
+  let person_id = null,
       result = null;
 
-  user_id = getUserID(user_email.trim());
-
-  if (user_id)
-  {
-    result = user_id;
-  } else {
-    let user_data = function() {
-      $.ajax({
-        async: false,
-        url: "https://itp.patrickmcneill.com/data/persons",
-        method: "POST",
-        headers: { key: API_KEY_DATABASE },
-        data: {
-          first_name: user_fname,
-          last_name: user_lname,
-          name: `${user_fname} ${user_lname}`,
-          email: user_email,
-          created_date: Date.now(),
-          last_modified_date: Date.now()
-        },
-        success: function(result) {
-          user_id = result.id;
-          console.log("Successfully created record for " + user_email);
-        },
-        error: function(err) {
-          console.log("Failed: " + err.responseText);
-        }
-      });
-      return user_id;
-    }();
-  }
-
-  console.log("User ID is: " + user_id);
-  return user_id;
+  return person_data = await $.ajax({
+    url: "https://itp.patrickmcneill.com/data/persons",
+    method: "POST",
+    headers: { key: API_KEY_DATABASE },
+    data: {
+      first_name: person_fname,
+      last_name: person_lname,
+      name: `${person_fname} ${person_lname}`,
+      email: person_email,
+      created_date: Date.now(),
+      last_modified_date: Date.now()
+    },
+    success: function(result) {
+      person_id = result.id;
+      console.log("Successfully created record for " + person_email);
+    },
+    error: function(err) {
+      console.log("Failed: " + err.responseText);
+    }
+  });
 }
 //-----------------------------------------------------------------------------
-function createArtistID(artist_name, artist_mbid)
+async function await_createArtistID(artist_name, artist_mbid)
 {
+  console.log("---------------------------------------------------------");
   console.log("Creating new Artist record for... " + artist_name.trim());
   let artist_id = null,
       result = null;
 
-  artist_id = getArtistID(artist_mbid);
-
-  if (artist_id)
-  {
-    result = artist_id;
-  } else {
-    let artist_data = function() {
-      $.ajax({
-        async: false,
-        url: "https://itp.patrickmcneill.com/data/artists",
-        method: "POST",
-        headers: { key: API_KEY_DATABASE },
-        data: {
-          artist_name: artist_name,
-          artist_mbid: artist_mbid,
-          created_date: Date.now(),
-          last_modified_date: Date.now()
-        },
-        success: function(result) {
-          artist_id = result.id;
-          console.log("Successfully created record for " + artist_name);
-        },
-        error: function(err) {
-          console.log("Failed: " + err.responseText);
-        }
-      });
-      return artist_id;
-    }();
-  }
-
-  console.log("Artist ID is: " + artist_id);
-  return artist_id;
+  return artist_data = await $.ajax({
+    url: "https://itp.patrickmcneill.com/data/artists",
+    method: "POST",
+    headers: { key: API_KEY_DATABASE },
+    data: {
+      artist_name: artist_name,
+      artist_mbid: artist_mbid,
+      created_date: Date.now(),
+      last_modified_date: Date.now()
+    },
+    success: function(result) {
+      artist_id = result.id;
+      console.log("Successfully created record for " + artist_name);
+    },
+    error: function(err) {
+      console.log("Failed: " + err.responseText);
+    }
+  });
 }
 //-----------------------------------------------------------------------------
-function createSignupID(user_id, artist_id)
+async function await_createSignupID(person_id, artist_id)
 {
+  console.log("---------------------------------------------------------");
   console.log("Creating new Signup record...");
   let signup_id = null,
       result = null;
 
-  if (signup_id)
-  {
-    result = signup_id;
-  } else {
-    let signup_data = function() {
-      $.ajax({
-        async: false,
-        url: "https://itp.patrickmcneill.com/data/alert_signups",
-        method: "POST",
-        headers: { key: API_KEY_DATABASE },
-        data: {
-          person_id: user_id,
-          artist_id: artist_id,
-          created_date: Date.now(),
-          last_modified_date: Date.now()
-        },
-        success: function(result) {
-          signup_id = result.id;
-          console.log("Successfully created new signup!");
-        },
-        error: function(err) {
-          console.log("Failed: " + err.responseText);
-        }
-      });
-      return signup_id;
-    }();
-  }
-
-  console.log("Signup ID is: " + signup_id);
-  return signup_id;
+  return signup_data = await $.ajax({
+    url: "https://itp.patrickmcneill.com/data/persons_artists_signups",
+    method: "POST",
+    headers: { key: API_KEY_DATABASE },
+    data: {
+      person_id: person_id,
+      artist_id: artist_id,
+      created_date: Date.now(),
+      last_modified_date: Date.now()
+    },
+    success: function(result) {
+      signup_id = result.id;
+      console.log("Successfully created new signup!");
+    },
+    error: function(err) {
+      console.log("Failed: " + err.responseText);
+    }
+  });
 }
 //================================================================================
 // HELPER FUNCTIONS

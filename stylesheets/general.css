@@ -26,10 +26,10 @@ button, form input[type="submit"] {
   font-size: 100%;
 }
 .success_msg {
-  color: #ff0000;
+  color: #0a730a;
 }
 .error_msg {
-  color: #000000;
+  color: #862d2d;
 }
 /* Search Form */
 .search_form {
@@ -143,7 +143,15 @@ button, form input[type="submit"] {
   font-size: 85%;
   font-weight: bold;
 }
-
+.sign_up_form.modal p label { float: left; color: #333; width: 110px; line-height: 22px; }
+.sign_up_form.modal p input[type="text"],
+.sign_up_form.modal p input[type="email"] {
+  font-size: normal 14px/20px;
+  padding: 3px;
+  border: 1px solid #ddd;
+  width: 250px;
+  height: 30px;
+}
 
 /*
 .sign_up_form.modal {
