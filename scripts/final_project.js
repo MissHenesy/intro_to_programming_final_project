@@ -24,7 +24,6 @@ function attach_dom_events()
       validate_input();
     }
   );
-
   $("#frm_artist_search").submit(function(event)
     {
       event.preventDefault();
@@ -33,7 +32,6 @@ function attach_dom_events()
       find_artist_info(artist_val);
     }
   );
-
   $("a[href='#frm_sign_up']").click(function(event) {
     event.preventDefault();
     $(this).modal({
@@ -41,14 +39,12 @@ function attach_dom_events()
       fadeDelay: 0.50
     });
   });
-
   $("#frm_sign_up").submit(function(event)
     {
       event.preventDefault();
       sign_up_handler();
     }
   );
-
   $("#frm_sign_up").on($.modal.BEFORE_CLOSE, function(event, modal)
     {
       $("#frm_sign_up :input").each(function()
@@ -156,7 +152,7 @@ function display_ticketmaster_info(artist_val)
         }
       }
     }).catch(err => {
-      console.log("Oops! An unexpected error occurred: " + err.message);
+      console.error("An unexpected error occurred: " + err.message);
     });
 }
 //-----------------------------------------------------------------------------
@@ -182,23 +178,26 @@ function display_top_hits(artist_val)
       contentType: "application/json",
       success: function(data)
         {
-          div_content = "<h2>Top 10 Songs</h2>";
-          div_content += "<ol id=\"ol_top_songs\">";
-          let track_list = data.message.body.track_list;
-          let i_ctr = 0
-          track_list.forEach(function(item)
-            {
-              div_content += `<li>${item.track.track_name}`;
-              div_content += `<ul><li>(from the album: ${item.track.album_name})</li></ul>`
-            }
-          )
-          div_content += "</ol>";
-          div_musixmatch.html(div_content);
+          if (data.length > 0)
+          {
+            div_content = "<h2>Top 10 Songs</h2>";
+            div_content += "<ol id=\"ol_top_songs\">";
+            let track_list = data.message.body.track_list;
+            let i_ctr = 0
+            track_list.forEach(function(item)
+              {
+                div_content += `<li>${item.track.track_name}`;
+                div_content += `<ul><li>(from the album: ${item.track.album_name})</li></ul>`
+              }
+            )
+            div_content += "</ol>";
+            div_musixmatch.html(div_content);
+          }
         },
       error: function(jqXHR, textStatus, errorThrown) {
-          console.log(jqXHR);
-          console.log(textStatus);
-          console.log(errorThrown);
+          console.error(errorThrown);
+          console.error(textStatus);
+          console.error(jqXHR);
       }
     }
   );
@@ -253,12 +252,12 @@ function sign_up_handler()
       person_email = $("#fld_email").val(),
       result = false;
 
-  // Nice example of how Promises and Ajax work together can be found here::
+  // A nice example of how Promises and Ajax work together can be found here::
   // https://tylermcginnis.com/async-javascript-from-callbacks-to-promises-to-async-await/
   await_getAllIDs(person_email, artist_mbid)
     .then(await_createSignUp)
     .then(display_sign_up_results)
-    .catch(err => { console.log(err) });
+    .catch(err => { console.error(err) });
 }
 //-----------------------------------------------------------------------------
 async function await_getAllIDs(person_email, artist_mbid)
@@ -270,7 +269,9 @@ async function await_getAllIDs(person_email, artist_mbid)
     let result = null;
 
     promises.push(p1,p2);
-    result = await Promise.all(promises);
+    result = await Promise.all(promises)
+                          .catch((err) => console.error(err.message));
+
     if (result[0] && result[1])
     {
       p3 = await getSignupID(result[0], result[1]);
@@ -369,46 +370,55 @@ async function await_createSignUp(ids)
   let person_id = ids[0],
       artist_id = ids[1],
       signup_id = ids[2],
-      artist_name = $("#hdn_artist_name").val(),
-      artist_mbid = $("#hdn_artist_mbid").val(),
-      person_fname = $("#fld_fname").val(),
-      person_lname = $("#fld_lname").val(),
-      person_email = $("#fld_email").val(),
       result = false;
 
-  if (!person_id)
+  if (signup_id && artist_id && person_id)
   {
-    let person = await await_createPersonID(person_fname, person_lname, person_email);
-    person_id = person.id;
-    console.log(`Created person_id: ${person_id}`);
-  }
-  if (!artist_id)
-  {
-    let artist = await await_createArtistID(artist_name, artist_mbid);
-    artist_id = artist.id;
-    console.log(`Created artist_id: ${artist_id}`);
-  }
-  if (!signup_id && person_id && artist_id)
-  {
-    let signup = await await_createSignupID(person_id, artist_id);
-    signup_id = signup.id;
-    console.log(`Created signup_id: ${signup_id} using person_id ${person_id} and artist_id ${artist_id}.`);
-    if (signup_id)
+    // A sign up already exists for this person/artist.
+    // Nothing to do here, let's leave!
+    return result;
+  } else {
+    // Let's create a signup!
+    let artist_name  = $("#hdn_artist_name").val(),
+        artist_mbid  = $("#hdn_artist_mbid").val(),
+        person_fname = $("#fld_fname").val(),
+        person_lname = $("#fld_lname").val(),
+        person_email = $("#fld_email").val();
+
+    if (!person_id)
     {
-      result = true;
+      let person = await createPersonID(person_fname, person_lname, person_email);
+      person_id = person.id;
+      console.log(`Created person_id: ${person_id}`);
+    }
+    if (!artist_id)
+    {
+      let artist = await createArtistID(artist_name, artist_mbid);
+      artist_id = artist.id;
+      console.log(`Created artist_id: ${artist_id}`);
+    }
+    if (!signup_id && person_id && artist_id)
+    {
+      let signup = await createSignupID(person_id, artist_id);
+      signup_id = signup.id;
+      console.log(`Created signup_id: ${signup_id} using person_id ${person_id} and artist_id ${artist_id}.`);
+      if (signup_id)
+      {
+        result = true;
+      }
     }
   }
   return result;
 }
 //-----------------------------------------------------------------------------
-async function await_createPersonID(person_fname, person_lname, person_email)
+function createPersonID(person_fname, person_lname, person_email)
 {
   console.log("---------------------------------------------------------");
   console.log("Creating new Person record for... " + person_email.trim());
   let person_id = null,
       result = null;
 
-  return person_data = await $.ajax({
+  return person_data = $.ajax({
     url: "https://itp.patrickmcneill.com/data/persons",
     method: "POST",
     headers: { key: API_KEY_DATABASE },
@@ -430,14 +440,14 @@ async function await_createPersonID(person_fname, person_lname, person_email)
   });
 }
 //-----------------------------------------------------------------------------
-async function await_createArtistID(artist_name, artist_mbid)
+function createArtistID(artist_name, artist_mbid)
 {
   console.log("---------------------------------------------------------");
   console.log("Creating new Artist record for... " + artist_name.trim());
   let artist_id = null,
       result = null;
 
-  return artist_data = await $.ajax({
+  return artist_data = $.ajax({
     url: "https://itp.patrickmcneill.com/data/artists",
     method: "POST",
     headers: { key: API_KEY_DATABASE },
@@ -457,14 +467,14 @@ async function await_createArtistID(artist_name, artist_mbid)
   });
 }
 //-----------------------------------------------------------------------------
-async function await_createSignupID(person_id, artist_id)
+function createSignupID(person_id, artist_id)
 {
   console.log("---------------------------------------------------------");
   console.log("Creating new Signup record...");
   let signup_id = null,
       result = null;
 
-  return signup_data = await $.ajax({
+  return signup_data = $.ajax({
     url: "https://itp.patrickmcneill.com/data/persons_artists_signups",
     method: "POST",
     headers: { key: API_KEY_DATABASE },
