@@ -113,9 +113,10 @@ button, form input[type="submit"] {
 #div_musixmatch_results ol {
   font-size: 80%;
   font-weight: bold;
+  padding-left: 1.25em;
 }
 #div_musixmatch_results ol ul {
-  margin-left: 8px;
+  margin-left: 0px;
   padding-left: 0px;
   font-weight: normal;
   font-style: italic;
