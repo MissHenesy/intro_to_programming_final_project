@@ -178,7 +178,7 @@ function display_top_hits(artist_val)
       contentType: "application/json",
       success: function(data)
         {
-          if (data.length > 0)
+          if (data.message.body.track_list.length > 0)
           {
             div_content = "<h2>Top 10 Songs</h2>";
             div_content += "<ol id=\"ol_top_songs\">";
