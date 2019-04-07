@@ -3,6 +3,9 @@ This repository stores all files related to the Final Project for the Berklee On
 
 The name of this project is: "Fan Central Station".
 
+To get the full experience of the site, download the repo into a local directory on your computer, and then launch "index.html" into a browser.
+* NOTE: You will need to acquire your own API Keys in order to see the API data that is pulled into the site. *
+
 **PLEASE NOTE THAT THIS IS A WORK IN PROGRESS!**
 
 Fan Central Station features a search box where users can look up their favorite artists.
