@@ -27,9 +27,9 @@ From an outside-in level, each "artist fan page" includes the following::
 * News about the artist (Google News API)
   - The site will include news items about the artist via Google's News API
 * Add Jasmine to the site for Unit Testing
-* Improve CSS for a more updated user experience
 
 **DREAM UPDATES FOR A TIME IN THE DISTANT FUTURE**
+* Improve CSS for a more updated user experience
 * Get this web site up on a web server
   - Much of the power (and security) of this site will require a web server, so it will be a priority to decide on a server type and server language, and update the web site accordingly
 * Put information into a different database
