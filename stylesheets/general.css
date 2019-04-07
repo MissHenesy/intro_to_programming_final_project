@@ -144,6 +144,7 @@ button, form input[type="submit"] {
 #div_musixmatch_results {
   float: left;
   width: 20%;
+  margin-bottom: 3em;
 }
 #div_musixmatch_results ol {
   font-size: 80%;
