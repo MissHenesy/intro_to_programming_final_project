@@ -166,8 +166,7 @@ button, form input[type="submit"] {
 #div_fanart_results {
   display: block;
   width: 100%;
-  padding: 12px 0px 25px 0px;
-  margin-left: 12px;
+  padding: 3px 8px;
 }
 #div_fanart_results img {
   height: 150px;
