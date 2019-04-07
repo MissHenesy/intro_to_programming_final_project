@@ -1,4 +1,8 @@
 /* General/all-purpose styles */
+*, html {
+  margin: 0;
+  padding: 0;
+}
 body {
   font: 18px Helvetica, Arial, sans-serif;
   background-color: #faf0e6;
@@ -14,10 +18,17 @@ img.artist_portrait {
 input {
   font: inherit;
 }
+h1 {
+  margin-top: 1em;
+  text-align: center;
+}
 h3 {
   font-size: 120%;
   font-weight: bold;
   text-align: center;
+}
+hr {
+  margin: 1em 0;
 }
 button, form input[type="submit"] {
   height: 40px;
@@ -56,7 +67,7 @@ button, form input[type="submit"] {
 /* Page Divs */
 #div_bg_container {
   width: 100%;
-  height: 25%;
+  height: 20%;
   position: relative;
 }
 #div_bg_container .bg {
@@ -75,6 +86,9 @@ button, form input[type="submit"] {
   filter: grayscale(65%);
   opacity: 0.4;
 }
+#div_container {
+  margin: 1em 1.5em;
+}
 #div_header h1 {
   width: 100%;
   font-size: 300%;
@@ -85,8 +99,23 @@ button, form input[type="submit"] {
   z-index: 5;
 }
 #div_artist_container {
-  margin: 0 auto;
+  margin-top: 1em;
   width: 100%;
+}
+#div_artist_container h2 {
+  margin-bottom: 0.5em;
+}
+#div_artist_container img.api_logo {
+  height: 30px;
+}
+#div_artist_container #img_musixmatch_logo {
+  height: 50px;
+}
+#div_artist_container #img_tm_logo {
+  padding: 10px 0px;
+}
+#div_artist_signup {
+  margin: 1em 0;
 }
 #div_artist_summary {
   float: left;
@@ -98,13 +127,19 @@ button, form input[type="submit"] {
 }
 #div_ticketmaster_results {
   float: left;
-  height: 100%;
-  width: 20%;
-  overflow: scroll;
   margin-right: 8px;
+  width: 19%;
 }
-#div_ticketmaster_results p {
+#div_ticketmaster_content
+{
+  overflow: scroll;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+#div_ticketmaster_content p {
   font-size: 80%;
+  margin-bottom: 0.5em;
 }
 #div_musixmatch_results {
   float: left;
@@ -116,8 +151,9 @@ button, form input[type="submit"] {
   padding-left: 1.25em;
 }
 #div_musixmatch_results ol ul {
-  margin-left: 0px;
-  padding-left: 0px;
+  margin-left: 0;
+  margin-bottom: 0.25em;
+  padding-left: 0;
   font-weight: normal;
   font-style: italic;
   font-size: 90%;
@@ -140,10 +176,14 @@ button, form input[type="submit"] {
 .sign_up_form.modal {
   background-color: #e6e3c1fc;
 }
+.sign_up_form {
+  padding: 2em;
+}
 .sign_up_form #p_sign_up_message {
   font-size: 85%;
   font-weight: bold;
 }
+.sign_up_form.modal p { margin: 1em 0; }
 .sign_up_form.modal p label { float: left; color: #333; width: 110px; line-height: 22px; }
 .sign_up_form.modal p input[type="text"],
 .sign_up_form.modal p input[type="email"] {
@@ -153,7 +193,7 @@ button, form input[type="submit"] {
   width: 250px;
   height: 30px;
 }
-
+/* UNUSED (BUT HELPFUL) CSS FOR SIGNUP FORM */
 /*
 .sign_up_form.modal {
   border-radius: 0;

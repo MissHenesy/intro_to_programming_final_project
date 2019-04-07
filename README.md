@@ -8,6 +8,7 @@ The name of this project is: "Fan Central Station".
 Fan Central Station features a search box where users can look up their favorite artists.
 
 The search reaches out to several APIs to pull in various content about the artist.
+The ultimate goal of this site is to scour the internet for important news and events related to the current artist, and pull it all into a central site (i.e., Fan Central Station), saving time for users who want to know both current events and history tied to their favorite artists.
 
 From an outside-in level, each "artist fan page" includes the following::
 
@@ -15,14 +16,29 @@ From an outside-in level, each "artist fan page" includes the following::
 * [DONE!] Top 10 songs from the artist, pulled in from the "musixmatch" API
 * [DONE!] A summary of the artist, from the "Lastfm" API
 * [DONE!] Tour dates for the artist, from the "Ticketmaster" API
-* [IN PROGRESS] A signup sheet for users to be kept informed about their favorite artist
+* [DONE!] A signup sheet for users to be kept informed about their favorite artist
+* [DONE!] Add contractually obligated images/links to API sites where the API blurbs appear
 
-**THINGS LEFT TO DO**
-* Add links to API sites where contractually necessary
-  - Let's face it, no one likes getting sued
-* Add names and email addresses to a database
-  - I've got a sign up sheet, now all I need to do is connect it to an API data store and start collecting information. But first I need to get authentication! I'll send another request in that direction.
-* Most recent tweets about the artist from Twitter
-  - This will be a great addition in the future. The Twitter search API now requires server-side scripting in order for it to return data. If this project ever gets placed on a web server, I'll be sure to add this Twitter piece.
-* News about the artist (api TBD)
-  - I might or might not add this feature in the future. The web page is looking pretty crammed right now. But if I can think of a layout configuration that will allow for more elements on the page, then I'll try to add this. In the meantime, I can still at least search to see if there is even an API that returns current events about an artist.
+**UPDATES COMING UP IN THE NEAR FUTURE**
+* News about the artist (Google News API)
+  - The site will include news items about the artist via Google's News API
+* Add Jasmine to the site for Unit Testing
+* Improve CSS for a more updated user experience
+
+**DREAM UPDATES FOR A TIME IN THE DISTANT FUTURE**
+* Get this web site up on a web server
+  - Much of the power (and security) of this site will require a web server, so it will be a priority to decide on a server type and server language, and update the web site accordingly
+* Put information into a different database
+  - Data is currently stored in Patrick McNeill's API Data Store; an updated site will use its own database
+* Internationalize the site
+  - Ticketmaster allows us to pull in concert events for artists happening all over the world. I've started small here, and just filtered info to events occurring in the U.S. But it would be good to check the user's location via I.P. address, and default information to based on the country we receive from the I.P.
+* Add most recent tweets about the artist from Twitter
+    - This will be a great addition in the future. The Twitter search API now requires server-side scripting in order for it to return data. If this project ever gets placed on a web server, I'll be sure to add this Twitter piece
+* Allow users to choose countries
+  - Add a dropdown that will allow users to see news/events for their artists in the countries of their choice
+* Actually send emails to users
+  - Because currently we're just storing email info in the database
+* Create a log in for users
+  - This will allow users to update their profile information
+* Create an admin interface
+  - This will allow web administrators to update information about users and artists
