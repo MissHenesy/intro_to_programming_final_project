@@ -83,8 +83,9 @@ function display_lastfm_info(artist_val)
     let div_lastfm = $("#div_lastfm_results");
     let hdn_artist_mbid;
     let div_content = "";
-    let bln_content_exists = false;
+    let bln_bio_exists = false;
     let artist_name;
+    let artist_img;
     let artist_mbid;
 
     div_lastfm.empty();
@@ -97,29 +98,31 @@ function display_lastfm_info(artist_val)
           if (json.artist)
           {
             artist_name = json.artist.name;
+            artist_img = json.artist.image[3]["#text"];
             artist_mbid = json.artist.mbid;
+            $("#div_artist_container #hdn_artist_name").val(artist_name);
+            $("#div_artist_container #hdn_artist_mbid").val(artist_mbid);
             if (json.artist.bio.content)
             {
-              bln_content_exists = true;
+              bln_bio_exists = true;
             }
           } else {
             artist_name = artist_val;
           }
-          if (bln_content_exists)
+          if (bln_bio_exists)
           {
-              $("#div_artist_container #hdn_artist_name").val(artist_name);
-              $("#div_artist_container #hdn_artist_mbid").val(artist_mbid);
-              $("#div_artist_signup").show();
               $("#sp_artist_name").text(artist_name);
+              $("#div_artist_signup").show();
               div_content += `<h2>About ${artist_name}</h2>`;
               div_content += `<img align="left" class="artist_portrait"
                              src="${json.artist.image[3]["#text"]}" />`;
               div_content += `<p>${json.artist.bio.summary}</p>`;
           } else {
+            if (!artist_img) { artist_img = get_random_image(); }
             $("#div_artist_signup").hide();
             div_content = `<h2>${artist_name}</h2>`;
             div_content += `<img align="left" class="artist_portrait"
-                           src="${get_random_image()}" />
+                           src="${artist_img}" />
                            <p>Aww, bummer! We could not find any bio info for
                            ${artist_name}.</p>`;
           }
@@ -284,7 +287,7 @@ function display_art(artist_val, artist_mbid)
                 }
               }
             }
-            if (div_fanart)
+            if (div_fanart.html().length > 0)
             {
               div_fanart.append(`<a href="https://fanart.tv/" target="_blank">
                                 <img id="img_fanarttv_logo" class="api_logo"
