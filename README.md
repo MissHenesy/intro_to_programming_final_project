@@ -30,6 +30,7 @@ From an outside-in level, each "artist fan page" includes the following::
   - Much of the power (and security) of this site will require a web server, so it will be a priority to decide on a server type and server language, and update the web site accordingly
 * Put information into a different database
   - Data is currently stored in Patrick McNeill's API Data Store; an updated site will use its own database
+* Expand site from "just music artists" to all kinds of entertainers
 * Localize results by user
   - Determine where the user is by I.P., and display "News/Events in your area!" based on what we can whittle down in our APIs
 * Internationalize the site
