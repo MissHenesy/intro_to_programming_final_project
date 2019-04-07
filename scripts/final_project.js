@@ -312,8 +312,6 @@ function sign_up_handler()
       person_email = $("#fld_email").val(),
       result = false;
 
-  // A nice example of how Promises and Ajax work together can be found here::
-  // https://tylermcginnis.com/async-javascript-from-callbacks-to-promises-to-async-await/
   await_getAllIDs(person_email, artist_mbid)
     .catch(err => { err_handler(err) })
     .then(await_createSignUp)
@@ -564,7 +562,6 @@ function createSignupID(person_id, artist_id)
 //================================================================================
 // GLOBAL FUNCTIONS
 //================================================================================
-// See https://raygun.com/javascript-debugging-tips for more cool info
 function err_handler(err=null, err_jxhr=null, err_text="", err_thrown="")
 {
   if (err_jxhr)
