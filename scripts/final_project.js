@@ -78,7 +78,7 @@ function display_lastfm_info(artist_val)
 {
   try
   {
-    let api_url = API_URL_LASTFM + "&method=artist.getInfo&artist=" + artist_val;
+    let api_url = `${API_URL_LASTFM}&method=artist.getInfo&artist=${artist_val}`;
     let div_artist_summary = $("#div_artist_summary");
     let div_lastfm = $("#div_lastfm_results");
     let hdn_artist_mbid;
@@ -117,11 +117,11 @@ function display_lastfm_info(artist_val)
               div_content += `<p>${json.artist.bio.summary}</p>`;
           } else {
             $("#div_artist_signup").hide();
-            div_content = "<h2>" + artist_name + "</h2>" +
-                          "<img align=\"left\" class=\"artist_portrait\" src=\"" +
-                          get_random_image() + "\" />" +
-                          "<p>Aww, bummer! We could not find any bio info for " +
-                          artist_name + ".</p>"
+            div_content = `<h2>${artist_name}</h2>`;
+            div_content += `<img align="left" class="artist_portrait"
+                           src="${get_random_image()}" />
+                           <p>Aww, bummer! We could not find any bio info for
+                           ${artist_name}.</p>`;
           }
           $("#div_artist_container").show();
           div_lastfm.append(div_content);
@@ -217,7 +217,7 @@ function display_top_hits(artist_val)
                 data.message.body.track_list.length > 0)
             {
               div_content += "<h2>Top 10 Songs</h2>";
-              div_content += `<ol id="ol_top_songs">`;
+              div_content += "<ol id=\"ol_top_songs\">";
               let track_list = data.message.body.track_list;
               let i_ctr = 0
               track_list.forEach(function(item)
@@ -259,7 +259,7 @@ function display_art(artist_val, artist_mbid)
   {
     if (artist_mbid)
     {
-      api_url = API_URL_FANART + artist_mbid + "?api_key=" + API_KEY_FANART;
+      api_url = `${API_URL_FANART}${artist_mbid}?api_key=${API_KEY_FANART}`;
       $.getJSON(api_url)
         .done(function(json_art)
           {
@@ -267,7 +267,7 @@ function display_art(artist_val, artist_mbid)
             {
               if (json_art.artistthumb[i] && i_ctr < 8)
               {
-                img_fanart = "<img src=\"" + json_art.artistthumb[i].url + "\" />\n"
+                img_fanart = `<img src="${json_art.artistthumb[i].url}" />\n`;
                 div_fanart.append(img_fanart);
                 i_ctr += 1;
               }
@@ -278,7 +278,7 @@ function display_art(artist_val, artist_mbid)
               {
                 if (json_art.albums[i].albumcover && i_ctr < 8)
                 {
-                  img_fanart = "<img src=\"" + json_art.albums[i].albumcover[0].url + "\" />\n"
+                  img_fanart = `<img src="${json_art.albums[i].albumcover[0].url}" />\n`;
                   div_fanart.append(img_fanart);
                   i_ctr += 1;
                 }
