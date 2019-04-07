@@ -102,10 +102,7 @@ function display_lastfm_info(artist_val)
             artist_mbid = json.artist.mbid;
             $("#div_artist_container #hdn_artist_name").val(artist_name);
             $("#div_artist_container #hdn_artist_mbid").val(artist_mbid);
-            if (json.artist.bio.content)
-            {
-              bln_bio_exists = true;
-            }
+            if (json.artist.bio.content) bln_bio_exists = true;
           } else {
             artist_name = artist_val;
           }
@@ -118,7 +115,7 @@ function display_lastfm_info(artist_val)
                              src="${json.artist.image[3]["#text"]}" />`;
               div_content += `<p>${json.artist.bio.summary}</p>`;
           } else {
-            if (!artist_img) { artist_img = get_random_image(); }
+            if (!artist_img) artist_img = get_random_image();
             $("#div_artist_signup").hide();
             div_content = `<h2>${artist_name}</h2>`;
             div_content += `<img align="left" class="artist_portrait"
