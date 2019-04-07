@@ -30,14 +30,17 @@ From an outside-in level, each "artist fan page" includes the following::
   - Much of the power (and security) of this site will require a web server, so it will be a priority to decide on a server type and server language, and update the web site accordingly
 * Put information into a different database
   - Data is currently stored in Patrick McNeill's API Data Store; an updated site will use its own database
+* Localize results by user
+  - Determine where the user is by I.P., and display "News/Events in your area!" based on what we can whittle down in our APIs
 * Internationalize the site
   - Ticketmaster allows us to pull in concert events for artists happening all over the world. I've started small here, and just filtered info to events occurring in the U.S. But it would be good to check the user's location via I.P. address, and default information to based on the country we receive from the I.P.
-  * Allow users to choose countries
-    - Add a dropdown that will allow users to see news/events for their artists in the countries of their choice
-  * Actually send emails to users
-    - Because currently we're just storing email info in the database
+* Allow users to choose countries
+  - Add a dropdown that will allow users to see news/events for their artists in the countries of their choice
+* Actually send emails to users
+  - Because currently we're just storing email info in the database
 * Create a log in for users
   - This will allow users to update their profile information
+  - This will also allow for more personalized API data, based on the user's stored address
 * Create an admin interface
   - This will allow web administrators to update information about users and artists
 * Add most recent tweets about the artist from Twitter
