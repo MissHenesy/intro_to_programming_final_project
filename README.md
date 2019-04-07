@@ -32,13 +32,20 @@ From an outside-in level, each "artist fan page" includes the following::
   - Data is currently stored in Patrick McNeill's API Data Store; an updated site will use its own database
 * Internationalize the site
   - Ticketmaster allows us to pull in concert events for artists happening all over the world. I've started small here, and just filtered info to events occurring in the U.S. But it would be good to check the user's location via I.P. address, and default information to based on the country we receive from the I.P.
-* Add most recent tweets about the artist from Twitter
-    - This will be a great addition in the future. The Twitter search API now requires server-side scripting in order for it to return data. If this project ever gets placed on a web server, I'll be sure to add this Twitter piece
-* Allow users to choose countries
-  - Add a dropdown that will allow users to see news/events for their artists in the countries of their choice
-* Actually send emails to users
-  - Because currently we're just storing email info in the database
+  * Allow users to choose countries
+    - Add a dropdown that will allow users to see news/events for their artists in the countries of their choice
+  * Actually send emails to users
+    - Because currently we're just storing email info in the database
 * Create a log in for users
   - This will allow users to update their profile information
 * Create an admin interface
   - This will allow web administrators to update information about users and artists
+* Add most recent tweets about the artist from Twitter
+      - This will be a great addition in the future. The Twitter search API now requires server-side scripting in order for it to return data. If this project ever gets placed on a web server, I'll be sure to add this Twitter piece
+* Keep scouring the internet for APIs that could improve the usefulness of this site. Some ideas:
+  - Instagram
+  - Facebook
+  - Live Nation
+  - Artist web pages
+  - Spotify
+  - And whatever else we might find!
