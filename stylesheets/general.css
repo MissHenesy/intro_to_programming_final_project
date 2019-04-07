@@ -166,11 +166,10 @@ button, form input[type="submit"] {
 #div_fanart_results {
   display: block;
   width: 100%;
-  padding: 3px 8px;
 }
 #div_fanart_results img {
   height: 150px;
-  padding: 12px 3px 12px 12px;
+  padding: 3px 8px;
 }
 /* Modal Sign Up Form */
 .sign_up_form.modal {
