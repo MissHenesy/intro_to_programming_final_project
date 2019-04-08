@@ -108,6 +108,9 @@ button, form input[type="submit"] {
 #div_artist_container img.api_logo {
   height: 30px;
 }
+#div_artist_container #img_lastfm_logo {
+  margin-top: 0.5em;
+}
 #div_artist_container #img_musixmatch_logo {
   height: 50px;
 }
@@ -127,7 +130,7 @@ button, form input[type="submit"] {
 }
 #div_ticketmaster_results {
   float: left;
-  margin-right: 8px;
+  margin: 0 0.15em 5em 0;
   width: 19%;
 }
 #div_ticketmaster_content

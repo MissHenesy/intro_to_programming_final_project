@@ -1,6 +1,7 @@
 //=============================================================================
 // CONSTANTS / GLOBAL VARIABLES
 //=============================================================================
+const API_URL_DATABASE = "https://itp.patrickmcneill.com/";
 const API_URL_TICKETMASTER = "https://app.ticketmaster.com/discovery/v2/events.json" +
                               "?sort=date,asc" +
                               "&apikey=" + API_KEY_TICKETMASTER;
@@ -76,72 +77,65 @@ function find_artist_info(artist_val)
 //-----------------------------------------------------------------------------
 function display_lastfm_info(artist_val)
 {
-  try
-  {
-    let api_url = `${API_URL_LASTFM}&method=artist.getInfo&artist=${artist_val}`;
-    let div_artist_summary = $("#div_artist_summary");
-    let div_lastfm = $("#div_lastfm_results");
-    let hdn_artist_mbid;
-    let div_content = "";
-    let bln_bio_exists = false;
-    let artist_name;
-    let artist_img;
-    let artist_mbid;
+  let api_url = `${API_URL_LASTFM}&method=artist.getInfo&artist=${artist_val}`;
+  let div_artist_summary = $("#div_artist_summary");
+  let div_lastfm = $("#div_lastfm_results");
+  let hdn_artist_mbid;
+  let div_content = "";
+  let bln_bio_exists = false;
+  let artist_name;
+  let artist_img;
+  let artist_mbid;
 
-    div_lastfm.empty();
-    $("#div_artist_container #hdn_artist_name").val("");
-    $("#div_artist_container #hdn_artist_mbid").val("");
+  div_lastfm.empty();
+  $("#div_artist_container #hdn_artist_name").val("");
+  $("#div_artist_container #hdn_artist_mbid").val("");
 
-    $.getJSON(api_url)
-      .done(function(json)
+  $.getJSON(api_url)
+    .done(function(json)
+      {
+        if (json.artist)
         {
-          if (json.artist)
-          {
-            artist_name = json.artist.name;
-            artist_img = json.artist.image[3]["#text"];
-            artist_mbid = json.artist.mbid;
-            $("#div_artist_container #hdn_artist_name").val(artist_name);
-            $("#div_artist_container #hdn_artist_mbid").val(artist_mbid);
-            if (json.artist.bio.content) bln_bio_exists = true;
-          } else {
-            artist_name = artist_val;
-          }
-          if (bln_bio_exists)
-          {
-              $("#sp_artist_name").text(artist_name);
-              $("#div_artist_signup").show();
-              div_content += `<h2>About ${artist_name}</h2>`;
-              div_content += `<img align="left" class="artist_portrait"
-                             src="${json.artist.image[3]["#text"]}" />`;
-              div_content += `<p>${json.artist.bio.summary}</p>`;
-          } else {
-            if (!artist_img) artist_img = get_random_image();
-            $("#div_artist_signup").hide();
-            div_content = `<h2>${artist_name}</h2>`;
+          artist_name = json.artist.name;
+          artist_img = json.artist.image[3]["#text"];
+          artist_mbid = json.artist.mbid;
+          $("#div_artist_container #hdn_artist_name").val(artist_name);
+          $("#div_artist_container #hdn_artist_mbid").val(artist_mbid);
+          if (json.artist.bio.content) bln_bio_exists = true;
+        } else {
+          artist_name = artist_val;
+        }
+        if (bln_bio_exists)
+        {
+            $("#sp_artist_name").text(artist_name);
+            $("#div_artist_signup").show();
+            div_content += `<h2>About ${artist_name}</h2>`;
             div_content += `<img align="left" class="artist_portrait"
-                           src="${artist_img}" />
-                           <p>Aww, bummer! We could not find any bio info for
-                           ${artist_name}.</p>`;
-          }
-          $("#div_artist_container").show();
-          div_lastfm.append(div_content);
-          div_lastfm.append(`<a href="https://www.last.fm/home" target="_blank">
-                            <img id="img_lastfm_logo" class="api_logo"
-                            src="images/api/audioscrobbler_logo2.png" /></a>`);
-          $("a").attr("target","_blank");
-          display_art(artist_val, artist_mbid);
+                           src="${json.artist.image[3]["#text"]}" />`;
+            div_content += `<p>${json.artist.bio.summary}</p>`;
+        } else {
+          if (!artist_img) artist_img = get_random_image();
+          $("#div_artist_signup").hide();
+          div_content = `<h2>${artist_name}</h2>`;
+          div_content += `<img align="left" class="artist_portrait"
+                         src="${artist_img}" />
+                         <p>Aww, bummer! We could not find any bio info for
+                         ${artist_name}.</p>`;
         }
-      )
-      .fail(function(jqXHR, textStatus, errorThrown)
-        {
-          err_handler(null, jqXHR, textStatus, errorThrown)
-        }
-      );
-  }
-  catch (err)
-  {
-    err_handler(err);
-  }
+        $("#div_artist_container").show();
+        div_lastfm.append(div_content);
+        div_lastfm.append(`<a href="https://www.last.fm/home" target="_blank">
+                          <img id="img_lastfm_logo" class="api_logo"
+                          src="images/api/audioscrobbler_logo2.png" /></a>`);
+        $("a").attr("target","_blank");
+        display_art(artist_val, artist_mbid);
+      }
+    )
+    .fail(function(jqXHR, textStatus, errorThrown)
+      {
+        err_handler(null, jqXHR, textStatus, errorThrown)
+      }
+    );
 }
 //-----------------------------------------------------------------------------
 function display_ticketmaster_info(artist_val)
@@ -193,57 +187,51 @@ function display_top_hits(artist_val)
   let div_musixmatch = $("#div_musixmatch_results");
   div_musixmatch.hide();
   div_musixmatch.empty();
-  try
-  {
-    $.ajax(
-      {
-        type: "GET",
-        data: {
-            apikey: API_KEY_MUSIXMATCH,
-            q_artist: artist_val,
-            s_track_rating: "desc",
-            page_size: 10,
-            page: 1,
-            format:"jsonp",
-            callback:"jsonp_callback"
-        },
-        url: "http://api.musixmatch.com/ws/1.1/track.search",
-        dataType: "jsonp",
-        jsonpCallback: "jsonp_callback",
-        contentType: "application/json",
-        success: function(data)
+
+  $.ajax(
+    {
+      type: "GET",
+      data: {
+          apikey: API_KEY_MUSIXMATCH,
+          q_artist: artist_val,
+          s_track_rating: "desc",
+          page_size: 10,
+          page: 1,
+          format:"jsonp",
+          callback:"jsonp_callback"
+      },
+      url: "http://api.musixmatch.com/ws/1.1/track.search",
+      dataType: "jsonp",
+      jsonpCallback: "jsonp_callback",
+      contentType: "application/json",
+      success: function(data)
+        {
+          if (typeof(data.message.body) === "object" &&
+              data.message.body.track_list.length > 0)
           {
-            if (typeof(data.message.body) === "object" &&
-                data.message.body.track_list.length > 0)
-            {
-              div_content += "<h2>Top 10 Songs</h2>";
-              div_content += "<ol id=\"ol_top_songs\">";
-              let track_list = data.message.body.track_list;
-              let i_ctr = 0
-              track_list.forEach(function(item)
-                {
-                  div_content += `<li>${item.track.track_name}`;
-                  div_content += `<ul><li>(from the album: ${item.track.album_name})</li></ul>`
-                }
-              )
-              div_content += "</ol>";
-              div_musixmatch.append(`<a href="https://www.musixmatch.com/" target="_blank">
-                                    <img id="img_musixmatch_logo" class="api_logo"
-                                    src="images/api/musixmatch_logo3.png" /></a><br />`);
-              div_musixmatch.append(div_content);
-              div_musixmatch.show();
-            }
-          },
-        error: function(jqXHR, textStatus, errorThrown) {
-          err_handler(null, jqXHR, textStatus, errorThrown);
-        }
+            div_content += "<h2>Top 10 Songs</h2>";
+            div_content += "<ol id=\"ol_top_songs\">";
+            let track_list = data.message.body.track_list;
+            let i_ctr = 0;
+            track_list.forEach(function(item)
+              {
+                div_content += `<li>${item.track.track_name}`;
+                div_content += `<ul><li>(from the album: ${item.track.album_name})</li></ul>`
+              }
+            )
+            div_content += "</ol>";
+            div_musixmatch.append(`<a href="https://www.musixmatch.com/" target="_blank">
+                                  <img id="img_musixmatch_logo" class="api_logo"
+                                  src="images/api/musixmatch_logo3.png" /></a><br />`);
+            div_musixmatch.append(div_content);
+            div_musixmatch.show();
+          }
+        },
+      error: function(jqXHR, textStatus, errorThrown) {
+        err_handler(null, jqXHR, textStatus, errorThrown);
       }
-    );
-  }
-  catch (err)
-  {
-    err_handler(err);
-  }
+    }
+  );
 }
 //-----------------------------------------------------------------------------
 function display_art(artist_val, artist_mbid)
@@ -255,54 +243,47 @@ function display_art(artist_val, artist_mbid)
   div_fanart.hide();
   div_fanart.empty();
 
-  try
+  if (artist_mbid)
   {
-    if (artist_mbid)
-    {
-      api_url = `${API_URL_FANART}${artist_mbid}?api_key=${API_KEY_FANART}`;
-      $.getJSON(api_url)
-        .done(function(json_art)
+    api_url = `${API_URL_FANART}${artist_mbid}?api_key=${API_KEY_FANART}`;
+    $.getJSON(api_url)
+      .done(function(json_art)
+        {
+          for (i in json_art.artistthumb)
           {
-            for (i in json_art.artistthumb)
+            if (json_art.artistthumb[i] && i_ctr < 8)
             {
-              if (json_art.artistthumb[i] && i_ctr < 8)
+              img_fanart = `<img src="${json_art.artistthumb[i].url}" />\n`;
+              div_fanart.append(img_fanart);
+              i_ctr += 1;
+            }
+          }
+          if (i_ctr < 8)
+          {
+            for (i in json_art.albums)
+            {
+              if (json_art.albums[i].albumcover && i_ctr < 8)
               {
-                img_fanart = `<img src="${json_art.artistthumb[i].url}" />\n`;
+                img_fanart = `<img src="${json_art.albums[i].albumcover[0].url}" />\n`;
                 div_fanart.append(img_fanart);
                 i_ctr += 1;
               }
             }
-            if (i_ctr < 8)
-            {
-              for (i in json_art.albums)
-              {
-                if (json_art.albums[i].albumcover && i_ctr < 8)
-                {
-                  img_fanart = `<img src="${json_art.albums[i].albumcover[0].url}" />\n`;
-                  div_fanart.append(img_fanart);
-                  i_ctr += 1;
-                }
-              }
-            }
-            if (div_fanart.html().length > 0)
-            {
-              div_fanart.append(`<a href="https://fanart.tv/" target="_blank">
-                                <img id="img_fanarttv_logo" class="api_logo"
-                                src="images/api/fanarttv_logo1.png" /></a>`);
-              div_fanart.show();
-            }
           }
-        )
-        .fail(function(jqXHR, textStatus, errorThrown)
+          if (div_fanart.html().length > 0)
           {
-            err_handler(null, jqXHR, textStatus, errorThrown)
+            div_fanart.append(`<a href="https://fanart.tv/" target="_blank">
+                              <img id="img_fanarttv_logo" class="api_logo"
+                              src="images/api/fanarttv_logo1.png" /></a>`);
+            div_fanart.show();
           }
-        );
-    }
-  }
-  catch (err)
-  {
-    err_handler(err);
+        }
+      )
+      .fail(function(jqXHR, textStatus, errorThrown)
+        {
+          err_handler(null, jqXHR, textStatus, errorThrown)
+        }
+      );
   }
 }
 //-----------------------------------------------------------------------------
@@ -381,7 +362,7 @@ function getPersonID(person_email)
 {
   return new Promise((resolve, reject) => {
     $.ajax({
-      url: `https://itp.patrickmcneill.com/where/persons/email/${person_email}`,
+      url: `${API_URL_DATABASE}/where/persons/email/${person_email}`,
       method: "GET",
       headers: { key: API_KEY_DATABASE },
       success: function(response) {
@@ -401,7 +382,7 @@ function getArtistID(artist_mbid)
 {
   return new Promise((resolve, reject) => {
     $.ajax({
-      url: `https://itp.patrickmcneill.com/where/artists/artist_mbid/${artist_mbid}`,
+      url: `${API_URL_DATABASE}/where/artists/artist_mbid/${artist_mbid}`,
       method: "GET",
       headers: { key: API_KEY_DATABASE },
       success: function(response) {
@@ -421,7 +402,7 @@ function getSignupID(person_id, artist_id)
 {
   return new Promise((resolve, reject) => {
     $.ajax({
-      url: `https://itp.patrickmcneill.com/where/persons_artists_signups/person_id/${person_id}`,
+      url: `${API_URL_DATABASE}/where/persons_artists_signups/person_id/${person_id}`,
       method: "GET",
       headers: { key: API_KEY_DATABASE },
       success: function(response) {
@@ -490,11 +471,9 @@ function createPersonID(person_fname, person_lname, person_email)
 {
   console.log("---------------------------------------------------------");
   console.log("Creating new Person record for... " + person_email.trim());
-  let person_id = null,
-      result = null;
 
-  return person_data = $.ajax({
-    url: "https://itp.patrickmcneill.com/data/persons",
+  return $.ajax({
+    url: `${API_URL_DATABASE}/data/persons`,
     method: "POST",
     headers: { key: API_KEY_DATABASE },
     data: {
@@ -504,10 +483,6 @@ function createPersonID(person_fname, person_lname, person_email)
       email: person_email,
       created_date: Date.now(),
       last_modified_date: Date.now()
-    },
-    success: function(result) {
-      person_id = result.id;
-      console.log("Successfully created record for " + person_email);
     }
   });
 }
@@ -516,11 +491,9 @@ function createArtistID(artist_name, artist_mbid)
 {
   console.log("---------------------------------------------------------");
   console.log("Creating new Artist record for... " + artist_name.trim());
-  let artist_id = null,
-      result = null;
 
-  return artist_data = $.ajax({
-    url: "https://itp.patrickmcneill.com/data/artists",
+  return $.ajax({
+    url: `${API_URL_DATABASE}/data/artists`,
     method: "POST",
     headers: { key: API_KEY_DATABASE },
     data: {
@@ -528,10 +501,6 @@ function createArtistID(artist_name, artist_mbid)
       artist_mbid: artist_mbid,
       created_date: Date.now(),
       last_modified_date: Date.now()
-    },
-    success: function(result) {
-      artist_id = result.id;
-      console.log("Successfully created record for " + artist_name);
     }
   });
 }
@@ -540,11 +509,9 @@ function createSignupID(person_id, artist_id)
 {
   console.log("---------------------------------------------------------");
   console.log("Creating new Signup record...");
-  let signup_id = null,
-      result = null;
 
-  return signup_data = $.ajax({
-    url: "https://itp.patrickmcneill.com/data/persons_artists_signups",
+  return $.ajax({
+    url: `${API_URL_DATABASE}/data/persons_artists_signups`,
     method: "POST",
     headers: { key: API_KEY_DATABASE },
     data: {
@@ -552,10 +519,6 @@ function createSignupID(person_id, artist_id)
       artist_id: artist_id,
       created_date: Date.now(),
       last_modified_date: Date.now()
-    },
-    success: function(result) {
-      signup_id = result.id;
-      console.log("Successfully created new signup!");
     }
   });
 }
@@ -568,7 +531,7 @@ function err_handler(err=null, err_jxhr=null, err_text="", err_thrown="")
   {
     console.error(`Status: ${err_jxhr.status}`);
     console.error(`Response Text: ${err_jxhr.responseText}`);
-    console.error(`Error: ${err_thrown}`);
+    console.error(`Error Thrown: ${err_thrown}`);
     console.error(`Error Text: ${err_text}`);
     console.error(err_jxhr);
   }
