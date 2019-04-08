@@ -336,24 +336,24 @@ function display_sign_up_results(sign_up_status)
   switch(sign_up_status)
   {
     case "sign_up_created":
-      result_text = "Awesome, you're all signed up!";
+      result_txt = "Awesome, you're all signed up!";
       class_type = "success_msg";
       break;
     case "sign_up_exists":
-      result_text = "Nothing to do here!<br /> Our records indicate that <u>" +
+      result_txt = "Nothing to do here!<br /> Our records indicate that <u>" +
                     $("#fld_email").val() + "</u> is already receiving " +
                     "alerts about " + $("#hdn_artist_name").val();
       class_type = "error_msg";
       break;
     default:
-      result_text = "Yikes! We were unable to sign you up, due to an " +
+      result_txt = "Yikes! We were unable to sign you up, due to an " +
                     "unexpected error in our system. " +
                     "Please try again later.";
       class_type = "error_msg";
   }
 
   $("#p_sign_up_message").removeClass().addClass(class_type);
-  $("#p_sign_up_message").html(result_text);
+  $("#p_sign_up_message").html(result_txt);
 }
 //================================================================================
 // DATABASE FUNCTIONS
