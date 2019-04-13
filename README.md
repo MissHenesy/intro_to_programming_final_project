@@ -28,6 +28,7 @@ From an outside-in level, each "artist fan page" includes the following::
 * News about the artist (Google News API)
   - The site will include news items about the artist via Google's News API
 * Add Jasmine to the site for Unit Testing
+* Refactor API calls to Last.fm, Musixmatch, Ticketmaster, etc., so that they use aync await, seeing as Last.fm needs to be queried first in order to obtain the artist_mbid value before moving on to to other API calls.
 
 **DREAM UPDATES FOR A TIME IN THE DISTANT FUTURE**
 * Improve CSS for a more updated user experience

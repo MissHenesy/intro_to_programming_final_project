@@ -318,8 +318,8 @@ async function await_getAllIDs(person_email, artist_mbid)
       if (result[0] && result[1])
       {
         p3 = await getSignupID(result[0], result[1]);
+        result.push(p3);
       }
-      result.push(p3);
       return result;
     }
     catch(err)
