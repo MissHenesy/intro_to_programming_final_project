@@ -52,7 +52,8 @@ button, form input[type="submit"] {
 }
 .search_form input[type="text"] {
   width: 300px;
-  font-size: 80%;
+  height: 25px;
+  font-size: 90%;
 }
 .search_form label {
   margin-right: 12px;
